@@ -360,8 +360,8 @@ display: none;
 <pre class="r"><code>library(tidyverse)
 library(tidyr)
 library(readxl)</code></pre>
-<div id="problem-1" class="section level2">
-<h2>Problem 1</h2>
+<div id="problem-1" class="section level1">
+<h1>Problem 1</h1>
 <pre class="r"><code># clean the data in pols-month.csv
 pols = read_csv(
   &quot;data/FiveThirtyEight_data/pols-month.csv&quot;,
@@ -381,8 +381,8 @@ pols = read_csv(
   mutate(month = as.numeric(month)) |&gt;
   mutate(month = month(month, label = TRUE, abbr=FALSE)) |&gt;
   
-##########???????########  there is a 2?
   # create the variable &#39;president&#39; and drop &#39;prez_gop and &#39;prez_dem&#39; 
+  # include the logic 
   pivot_longer(
     cols = c(prez_gop, prez_dem),
     names_to = &#39;president&#39;,
@@ -445,52 +445,198 @@ result = left_join(pols, snp, by = c(&#39;year&#39;, &#39;month&#39;))
 
 # merging unemployment into the result.
 result = left_join(result, ue, by = c(&#39;year&#39;, &#39;month&#39;))</code></pre>
-</div>
-<div id="reporting-the-datasets" class="section level1">
-<h1>Reporting the Datasets:</h1>
-<p>The dataset ‘pols’ contains variables related to the number of
-politicians who are democratic or republican in national institutes. The
-data collected the numbers between 1947 and 2015. There are 822 rows and
-9 columns in the data frame. There are 9 variables: ‘year’, ‘month’ (the
-year and month when the number was counted), ‘gov_gop’ (the number of
-republican governors on the associated date), ‘sen_gop’ (the number of
-republican senators on the associated date), ‘rep_gop’ (the number of
-republican representatives on the associated date), ‘gov_dem’ (the
-number of democratic governors on the associated date), ‘sen_dem’ (the
-number of democratic senators on the associated date), ‘rep_dem’ (the
+<div id="reporting-the-datasets" class="section level3">
+<h3>reporting the datasets:</h3>
+<p>The dataset <code>pols</code> contains variables related to the
+number of politicians who are democratic or republican in national
+institutes. The year range of the dataset is between 1947 and 2015.
+There are 822 rows and 9 columns in the data frame. This dataset
+includes 9 variables: <code>year</code>, <code>month</code> (the year
+and month when the number was counted), <code>gov_gop</code> (the number
+of republican governors on the associated date), <code>sen_gop</code>
+(the number of republican senators on the associated date),
+<code>rep_gop</code> (the number of republican representatives on the
+associated date), <code>gov_dem</code> (the number of democratic
+governors on the associated date), <code>sen_dem</code> (the number of
+democratic senators on the associated date), <code>rep_dem</code> (the
 number of democratic representatives on the associated date),
-‘president’ (on the associated year and month, whether the president is
-republican or democratic).<br />
+<code>president</code> (on the associated year and month, whether the
+president is republican (gop) or democratic (dem)).<br />
 <br />
-The dataset ‘snp’ records the closing values of the S&amp;P stock index
-in the associated year and month with the variable ‘close’. The data
-collected the numbers between 1950 and 2015. There are 787 rows and 3
-columns in the data frame. There are 3 variables. Besides the variable
-‘close’, variables ‘year’ and ‘month’ are the year and month when the
+The dataset <code>snp</code> records the closing values of the S&amp;P
+stock index in the associated year and month with the variable
+<code>close.</code> The year range of the dataset is between 1950 and
+2015. There are 787 rows and 3 columns in the data frame. This dataset
+includes 3 variables. Besides the variable <code>close</code>, variables
+<code>year</code> and <code>month</code> are the year and month when the
 number was counted.<br />
 <br />
-The dataset ‘ue’ recordes the percentage of the unemployment rate in the
-associated year and month with the variable ‘unemployment’. The data
-collected the numbers between 1948 and 2015. There are 816 rows and 3
-columns in the data frame. There are 3 variables. Besides the variable
-‘unemployment’, variables ‘year’ and ‘month’ are the year and month when
-the number was counted.<br />
+The dataset <code>ue</code> records the percentage of the unemployment
+rate in the associated year and month with the variable
+<code>unemployment</code>. The year range of the dataset is between 1948
+and 2015. There are 816 rows and 3 columns in the data frame. This
+dataset includes 3 variables. Besides the variable
+<code>unemployment</code>, variables <code>year</code> and
+<code>month</code> are the year and month when the number was
+counted.<br />
 <br />
-The final ‘result’ dataset is merged from the datasets mentioned above.
-The year range of the dataset is between 1947 and 2015. There are 822
-rows and 11 columns in the data frame. There are 11 variables included:
-‘year’, ‘month’ (the year and month when the number was counted),
-‘gov_gop’ (the number of republican governors on the associated date),
-‘sen_gop’ (the number of republican senators on the associated date),
-‘rep_gop’ (the number of republican representatives on the associated
-date), ‘gov_dem’ (the number of democratic governors on the associated
-date), ‘sen_dem’ (the number of democratic senators on the associated
-date), ‘rep_dem’ (the number of democratic representatives on the
-associated date), ‘president’ (on the associated year and month, whether
-the president is republican or democratic), ‘close’ (the closing values
-of the S&amp;P stock index in the associated year and month),
-‘unemployment’ (the percentage of the unemployment rate in the
-associated year and month).</p>
+The final <code>result</code> dataset is merged from the datasets
+mentioned above. The year range of the dataset is between 1947 and 2015.
+There are 822 rows and 11 columns in the data frame. This dataset
+includes 11 variables included: <code>year</code>, ‘month’ (the year and
+month when the number was counted), <code>gov_gop</code> (the number of
+republican governors on the associated date), <code>sen_gop</code> (the
+number of republican senators on the associated date),
+<code>rep_gop</code> (the number of republican representatives on the
+associated date), <code>gov_dem</code> (the number of democratic
+governors on the associated date), <code>sen_dem</code> (the number of
+democratic senators on the associated date), <code>rep_dem</code> (the
+number of democratic representatives on the associated date),
+<code>president</code> (on the associated year and month, whether the
+president is republican or democratic). <code>close</code> (the closing
+values of the S&amp;P stock index in the associated year and month),
+<code>unemployment</code> (the percentage of the unemployment rate in
+the associated year and month). Among those variables: <code>year</code>
+and <code>month</code> are used to merge three datasets;
+<code>gov_gop</code>, <code>sen_gop</code>, <code>rep_gop</code>,
+<code>gov_dem</code>, <code>sen_dem</code>, <code>rep_dem</code> and
+<code>president</code> come from the dataset <code>pol</code>;
+<code>close</code> comes from the dataset <code>snp</code>;
+<code>unemployment</code> comes from the dataset <code>ue</code>.</p>
+</div>
+</div>
+<div id="problem-2" class="section level1">
+<h1>Problem 2</h1>
+<pre class="r"><code>mr_df = 
+  read_excel(
+    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
+    sheet = &quot;Mr. Trash Wheel&quot;, 
+    range = &quot;A2:N653&quot;
+    ) |&gt; 
+  janitor::clean_names() |&gt;
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons &gt; 0) |&gt;
+  
+  # convert the format the &#39;year&#39;
+  mutate(year = as.numeric(year)) |&gt;
+
+  # round the numbers of sport balls
+  mutate(sports_balls = as.integer(sports_balls)) |&gt;
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = &quot;Mr. Trash Wheel&quot;)</code></pre>
+<pre class="r"><code>prof_df =
+  read_excel(
+    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
+    sheet = &quot;Professor Trash Wheel&quot;, 
+    range = &quot;A2:M121&quot;
+    ) |&gt;
+  janitor::clean_names() |&gt;
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons &gt; 0) |&gt;
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = &quot;Professor Trash Wheel&quot;)</code></pre>
+<pre class="r"><code>gwyn_df =
+  read_excel(
+    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
+    sheet = &quot;Gwynnda Trash Wheel&quot;, 
+    range = &quot;A2:L265&quot;
+    ) |&gt;
+  janitor::clean_names() |&gt;
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons &gt; 0) |&gt;
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = &quot;Gwynnda Trash Wheel&quot;)</code></pre>
+<pre class="r"><code># combine the three dataset
+wheel_df = 
+  bind_rows(
+    mr_df, 
+    prof_df,
+    gwyn_df
+  ) |&gt;
+  select(dumpster, year, month, date, trash_wheel, everything())</code></pre>
+<div id="reporting-the-datasets-1" class="section level3">
+<h3>reporting the datasets:</h3>
+<p>The dataset <code>mr_df</code> collects information of the “Mr. Trash
+Wheel” on the dumpster number, date of collection, amount of total
+litter and litter type from 2014-05-16 to 2024-06-11. There are 651 rows
+and 15 columns in the dataset. This dataset includes 15 variables:
+<code>dumpster</code> (the dumpster number); <code>month</code>,
+<code>year</code> and <code>date</code>(the month, year, and date are
+the time of data collection); <code>weight_tons</code> (the weight of
+the dumpster collected in tons); <code>volume_cubic_yards</code> (the
+volumn of the dumpster collected in cubic yards);
+<code>plastic_bottles</code>, <code>polystyrene</code>,
+<code>cigarette_butts</code>, <code>glass_bottles</code>,
+<code>plastic_bags</code>, <code>wrappers</code>, and
+<code>sports_balls</code> (numbers of different litter types in the
+associated dumpsters); <code>homes_powered</code> (the numbers of home
+powered from electricity made from the trash collected)
+<code>trash_wheel</code> (the variable generated to indicate that these
+dumpsters were collected by the Mr. Trash Wheel).<br />
+<br />
+The dataset <code>prof_df</code> collects information of the “Professor
+Trash Wheel” on the dumpster number, date of collection, amount of total
+litter and litter type from 2017-01-02 to 2024-05-30. There are 118 rows
+and 14 columns in the dataset. This dataset includes 14 variables:
+<code>dumpster</code> (the dumpster number); <code>month</code>,
+<code>year</code> and <code>date</code>(the month, year, and date are
+the time of data collection); <code>weight_tons</code> (the weight of
+the dumpster collected in tons); <code>volume_cubic_yards</code> (the
+volumn of the dumpster collected in cubic yards);
+<code>plastic_bottles</code>, <code>polystyrene</code>,
+<code>cigarette_butts</code>, <code>glass_bottles</code>,
+<code>plastic_bags</code> and <code>wrappers</code> (numbers of
+different litter types in the associated dumpsters);
+<code>homes_powered</code> (the numbers of home powered from electricity
+made from the trash collected) <code>trash_wheel</code> (the variable
+generated to indicate that these dumpsters were collected by the
+Professor Trash Wheel).<br />
+<br />
+The dataset <code>gwyn_df</code> collects information of the “Gwynnda
+Trash Wheel” on the dumpster number, date of collection, amount of total
+litter and litter type from 2021-07-03 to 2024-06-07. There are 263 rows
+and 13 columns in the dataset. This dataset includes 13 variables:
+<code>dumpster</code> (the dumpster number); <code>month</code>,
+<code>year</code> and <code>date</code>(the month, year, and date are
+the time of data collection); <code>weight_tons</code> (the weight of
+the dumpster collected in tons); <code>volume_cubic_yards</code> (the
+volumn of the dumpster collected in cubic yards);
+<code>plastic_bottles</code>, <code>polystyrene</code>,
+<code>cigarette_butts</code>, <code>plastic_bags</code> and
+<code>wrappers</code> (numbers of different litter types in the
+associated dumpsters); <code>homes_powered</code> (the numbers of home
+powered from electricity made from the trash collected)
+<code>trash_wheel</code> (the variable generated to indicate that these
+dumpsters were collected by the Gwynnda Trash Wheel).<br />
+<br />
+The dataset <code>wheel_df</code> were combined from the above three
+datasets. There are 1032 observation and 15 variables in the dataset.
+This dataset includes 15 variables: <code>dumpster</code> (the dumpster
+number); <code>year</code>, <code>month</code> and <code>date</code>(the
+month, year, and date are the time of data collection);
+<code>weight_tons</code> (the weight of the dumpster collected in tons);
+<code>volume_cubic_yards</code> (the volumn of the dumpster collected in
+cubic yards); <code>plastic_bottles</code>, <code>polystyrene</code>,
+<code>cigarette_butts</code>, <code>glass_bottles</code>,
+<code>plastic_bags</code>, <code>wrappers</code>, and
+<code>sports_balls</code> (numbers of different litter types in the
+associated dumpsters); <code>homes_powered</code> (the numbers of home
+powered from electricity made from the trash collected)
+<code>trash_wheel</code> (the variable generated to indicate which Trash
+Wheel collected the associate dumpster). The data from 2014-05-16 to
+2024-06-11 is collected. For available data, the total weight of trash
+collected by Professor Trash Wheel is 246.74 tons; the total number of
+cigarette butts collected by Gwynnda in June of 2022 is 52220.</p>
+</div>
 </div>
 
 

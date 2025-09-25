@@ -11,7 +11,7 @@ library(tidyr)
 library(readxl)
 ```
 
-## Problem 1
+# Problem 1
 
 ```{r pols-month, message=FALSE}
 # clean the data in pols-month.csv
@@ -33,8 +33,8 @@ pols = read_csv(
   mutate(month = as.numeric(month)) |>
   mutate(month = month(month, label = TRUE, abbr=FALSE)) |>
   
-##########???????########  there is a 2?
   # create the variable 'president' and drop 'prez_gop and 'prez_dem' 
+  # include the logic 
   pivot_longer(
     cols = c(prez_gop, prez_dem),
     names_to = 'president',
@@ -108,47 +108,189 @@ result = left_join(pols, snp, by = c('year', 'month'))
 result = left_join(result, ue, by = c('year', 'month'))
 ```
 
-# Reporting the Datasets:
+### reporting the datasets:
 
-The dataset 'pols' contains variables related to the number of politicians who are democratic or republican in national institutes.
+The dataset `pols` contains variables related to the number of politicians who are democratic or republican in national institutes.
 The year range of the dataset is between `r min(pull(pols, year))` and `r max(pull(pols, year))`.
 There are `r nrow(pols)` rows and `r ncol(pols)` columns in the data frame.
-There are `r ncol(pols)` variables:
-  'year', 'month' (the year and month when the number was counted),
-  'gov_gop' (the number of republican governors on the associated date),
-  'sen_gop' (the number of republican senators on the associated date),
-  'rep_gop' (the number of republican representatives on the associated date),
-  'gov_dem' (the number of democratic governors on the associated date),
-  'sen_dem' (the number of democratic senators on the associated date),
-  'rep_dem' (the number of democratic representatives on the associated date),
-  'president' (on the associated year and month, whether the president is republican or democratic).
+This dataset includes `r ncol(pols)` variables:
+  `year`, `month` (the year and month when the number was counted),
+  `gov_gop` (the number of republican governors on the associated date),
+  `sen_gop` (the number of republican senators on the associated date),
+  `rep_gop` (the number of republican representatives on the associated date),
+  `gov_dem` (the number of democratic governors on the associated date),
+  `sen_dem` (the number of democratic senators on the associated date),
+  `rep_dem` (the number of democratic representatives on the associated date),
+  `president` (on the associated year and month, whether the president is republican (gop) or democratic (dem)).
 \
 \
-The dataset 'snp' records the closing values of the S&P stock index in the associated year and month with the variable 'close'.
+The dataset `snp` records the closing values of the S&P stock index in the associated year and month with the variable `close.`
 The year range of the dataset is between `r min(pull(snp, year))` and `r max(pull(snp, year))`.
 There are `r nrow(snp)` rows and `r ncol(snp)` columns in the data frame.
-There are `r ncol(snp)` variables. Besides the variable 'close', variables 'year' and 'month' are the year and month when the number was counted.
+This dataset includes `r ncol(snp)` variables. Besides the variable `close`, variables `year` and `month` are the year and month when the number was counted.
 \
 \
-The dataset 'ue' records the percentage of the unemployment rate in the associated year and month with the variable 'unemployment'.
+The dataset `ue` records the percentage of the unemployment rate in the associated year and month with the variable `unemployment`.
 The year range of the dataset is between `r min(pull(ue, year))` and `r max(pull(ue, year))`.
 There are `r nrow(ue)` rows and `r ncol(ue)` columns in the data frame.
-There are `r ncol(ue)` variables. Besides the variable 'unemployment', variables 'year' and 'month' are the year and month when the number was counted.
+This dataset includes `r ncol(ue)` variables. Besides the variable `unemployment`, variables `year` and `month` are the year and month when the number was counted.
 \
 \
-The final 'result' dataset is merged from the datasets mentioned above.
+The final `result` dataset is merged from the datasets mentioned above.
 The year range of the dataset is between `r min(pull(result, year))` and `r max(pull(result, year))`.
 There are `r nrow(result)` rows and `r ncol(result)` columns in the data frame.
-There are `r ncol(result)` variables included:
-  'year', 'month' (the year and month when the number was counted),
-  'gov_gop' (the number of republican governors on the associated date),
-  'sen_gop' (the number of republican senators on the associated date),
-  'rep_gop' (the number of republican representatives on the associated date),
-  'gov_dem' (the number of democratic governors on the associated date),
-  'sen_dem' (the number of democratic senators on the associated date),
-  'rep_dem' (the number of democratic representatives on the associated date),
-  'president' (on the associated year and month, whether the president is republican or democratic),
-  'close' (the closing values of the S&P stock index in the associated year and month),
-  'unemployment' (the percentage of the unemployment rate in the associated year and month).
+This dataset includes `r ncol(result)` variables included:
+  `year`, 'month' (the year and month when the number was counted),
+  `gov_gop` (the number of republican governors on the associated date),
+  `sen_gop` (the number of republican senators on the associated date),
+  `rep_gop` (the number of republican representatives on the associated date),
+  `gov_dem` (the number of democratic governors on the associated date),
+  `sen_dem` (the number of democratic senators on the associated date),
+  `rep_dem` (the number of democratic representatives on the associated date),
+  `president` (on the associated year and month, whether the president is republican or democratic).
+  `close` (the closing values of the S&P stock index in the associated year and month),
+  `unemployment` (the percentage of the unemployment rate in the associated year and month).
+Among those variables: 
+  `year` and `month` are used to merge three datasets; 
+  `gov_gop`, `sen_gop`, `rep_gop`, `gov_dem`, `sen_dem`, `rep_dem` and `president` come from the dataset `pol`;
+  `close` comes from the dataset `snp`;
+  `unemployment` comes from the dataset `ue`.
 
- 
+
+
+# Problem 2
+
+```{r Mr. Trash Wheel}
+mr_df = 
+  read_excel(
+    "data/202409 Trash Wheel Collection Data.xlsx", 
+    sheet = "Mr. Trash Wheel", 
+    range = "A2:N653"
+    ) |> 
+  janitor::clean_names() |>
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons > 0) |>
+  
+  # convert the format the 'year'
+  mutate(year = as.numeric(year)) |>
+
+  # round the numbers of sport balls
+  mutate(sports_balls = as.integer(sports_balls)) |>
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = "Mr. Trash Wheel")
+```
+
+```{r Professor Trash Wheel}
+prof_df =
+  read_excel(
+    "data/202409 Trash Wheel Collection Data.xlsx", 
+    sheet = "Professor Trash Wheel", 
+    range = "A2:M121"
+    ) |>
+  janitor::clean_names() |>
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons > 0) |>
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = "Professor Trash Wheel")
+
+```
+
+```{r Gwynnda Trash Wheel}
+gwyn_df =
+  read_excel(
+    "data/202409 Trash Wheel Collection Data.xlsx", 
+    sheet = "Gwynnda Trash Wheel", 
+    range = "A2:L265"
+    ) |>
+  janitor::clean_names() |>
+  
+  # omit lines without dumpster-specific data
+  # keep the dumpster obs that the weight is greater than 0
+  filter(weight_tons > 0) |>
+  
+  # keep track of which Trash wheel this is 
+  mutate(trash_wheel = "Gwynnda Trash Wheel")
+```
+
+```{r bind rows}
+# combine the three dataset
+wheel_df = 
+  bind_rows(
+    mr_df, 
+    prof_df,
+    gwyn_df
+  ) |>
+  select(dumpster, year, month, date, trash_wheel, everything())
+```
+
+```{r calcuate num of cigarette_butts, echo=FALSE, include=FALSE}
+# prepare the information of Gwynnda in June of 2022
+cig_sum = 
+  wheel_df |>
+  filter(month == "June" & year==2022)
+```
+
+### reporting the datasets:
+The dataset `mr_df` collects information of the "Mr. Trash Wheel" on the dumpster number, date of collection, amount of total litter and litter type 
+from `r min(pull(mr_df, date))` to `r max(pull(mr_df, date))`.
+There are `r nrow(mr_df)` rows and `r ncol(mr_df)` columns in the dataset.
+This dataset includes `r ncol(mr_df)` variables:
+  `dumpster` (the dumpster number);
+  `month`, `year` and `date`(the month, year, and date are the time of data collection);
+  `weight_tons` (the weight of the dumpster collected in tons);
+  `volume_cubic_yards` (the volumn of the dumpster collected in cubic yards);
+  `plastic_bottles`, `polystyrene`, `cigarette_butts`, `glass_bottles`, 
+  `plastic_bags`, `wrappers`, and `sports_balls` (numbers of different litter types in the associated dumpsters);
+  `homes_powered` (the numbers of home powered from electricity made from the trash collected)
+  `trash_wheel` (the variable generated to indicate that these dumpsters were collected by the Mr. Trash Wheel).
+\
+\
+The dataset `prof_df` collects information of the "Professor Trash Wheel" on the dumpster number, date of collection, amount of total litter and litter type
+from `r min(pull(prof_df, date))` to `r max(pull(prof_df, date))`.
+There are `r nrow(prof_df)` rows and `r ncol(prof_df)` columns in the dataset.
+This dataset includes `r ncol(prof_df)` variables:
+  `dumpster` (the dumpster number);
+  `month`, `year` and `date`(the month, year, and date are the time of data collection);
+  `weight_tons` (the weight of the dumpster collected in tons);
+  `volume_cubic_yards` (the volumn of the dumpster collected in cubic yards);
+  `plastic_bottles`, `polystyrene`, `cigarette_butts`, `glass_bottles`, 
+  `plastic_bags` and `wrappers` (numbers of different litter types in the associated dumpsters);
+  `homes_powered` (the numbers of home powered from electricity made from the trash collected)
+  `trash_wheel` (the variable generated to indicate that these dumpsters were collected by the Professor Trash Wheel).
+\
+\
+The dataset `gwyn_df` collects information of the "Gwynnda Trash Wheel" on the dumpster number, date of collection, amount of total litter and litter type
+from `r min(pull(gwyn_df, date))` to `r max(pull(gwyn_df, date))`.
+There are `r nrow(gwyn_df)` rows and `r ncol(gwyn_df)` columns in the dataset.
+This dataset includes `r ncol(gwyn_df)` variables:
+  `dumpster` (the dumpster number);
+  `month`, `year` and `date`(the month, year, and date are the time of data collection);
+  `weight_tons` (the weight of the dumpster collected in tons);
+  `volume_cubic_yards` (the volumn of the dumpster collected in cubic yards);
+  `plastic_bottles`, `polystyrene`, `cigarette_butts`, `plastic_bags` and `wrappers` (numbers of different litter types in the associated dumpsters);
+  `homes_powered` (the numbers of home powered from electricity made from the trash collected)
+  `trash_wheel` (the variable generated to indicate that these dumpsters were collected by the Gwynnda Trash Wheel).
+\
+\
+The dataset `wheel_df` were combined from the above three datasets.
+There are `r nrow(wheel_df)` observation and `r ncol(wheel_df)` variables in the dataset.
+This dataset includes `r ncol(wheel_df)` variables:
+  `dumpster` (the dumpster number);
+  `year`, `month` and `date`(the month, year, and date are the time of data collection);
+  `weight_tons` (the weight of the dumpster collected in tons);
+  `volume_cubic_yards` (the volumn of the dumpster collected in cubic yards);
+  `plastic_bottles`, `polystyrene`, `cigarette_butts`, `glass_bottles`, 
+  `plastic_bags`, `wrappers`, and `sports_balls` (numbers of different litter types in the associated dumpsters);
+  `homes_powered` (the numbers of home powered from electricity made from the trash collected)
+  `trash_wheel` (the variable generated to indicate which Trash Wheel collected the associate dumpster).
+The data from `r min(pull(wheel_df, date))` to `r max(pull(wheel_df, date))` is collected.
+For available data, 
+the total weight of trash collected by Professor Trash Wheel is `r sum(pull(prof_df, weight_tons))` tons;
+the total number of cigarette butts collected by Gwynnda in June of 2022 is `r format(sum(pull(cig_sum, cigarette_butts)), scientific=FALSE)`.
+
