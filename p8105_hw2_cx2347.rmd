@@ -29,9 +29,11 @@ pols = read_csv(
   ) |>
   
   # change the format of 'year' and 'month'
-  mutate(year = as.numeric(year)) |>
-  mutate(month = as.numeric(month)) |>
-  mutate(month = month(month, label = TRUE, abbr=FALSE)) |>
+  mutate(
+    year = as.numeric(year),
+    month = as.numeric(month),
+    month = month(month, label = TRUE, abbr=FALSE)
+  ) |>
   
   # create the variable 'president' and drop 'prez_gop and 'prez_dem' 
   # include the logic 
@@ -49,7 +51,11 @@ pols = read_csv(
   select(-ind) |>
   
   # drop the 'day' variable
-  select(-day)
+  select(-day) |>
+  
+  # arrange the dataset
+  select(year, month, everything()) |>
+  arrange(year, month)
 ```
 
 ```{r snp, message=FALSE}
@@ -74,7 +80,8 @@ snp =
   mutate(month = month(date, label = TRUE, abbr = FALSE)) |>
   
   # rearrange the data and drop the 'date' variable
-  select(year, month, everything(), -date)
+  select(year, month, everything(), -date) |>
+  arrange(year, month)
 ```
 
 ```{r unemployment, message=FALSE}
@@ -94,10 +101,11 @@ ue =
   ) |>
 
   # change the format of the month
-  mutate(month = parse_date_time(
-    month,
-    orders = 'b')) |>
-  mutate(month = month(month, label =TRUE, abbr = FALSE))
+  mutate(
+    month = match(month, tolower(month.abb))
+    ) |>
+  mutate(month = month(month, label =TRUE, abbr = FALSE)) |>
+  arrange(year, month)
 ```
 
 ```{r merging, message=FALSE}
