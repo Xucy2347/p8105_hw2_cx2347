@@ -655,16 +655,9 @@ cigarette butts collected by Gwynnda in June of 2022 is 52220.</p>
     &quot;data/zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv&quot;,
     na = c(&quot;NA&quot;,&quot;.&quot;,&quot;&quot;)
   ) |&gt;
-  janitor::clean_names()</code></pre>
-<pre><code>## Rows: 149 Columns: 125
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr   (6): RegionType, StateName, State, City, Metro, CountyName
-## dbl (119): RegionID, SizeRank, RegionName, 2015-01-31, 2015-02-28, 2015-03-3...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>zip_df = 
+  janitor::clean_names()
+
+zip_df = 
   read_csv(
     &quot;data/zillow_data/Zip Codes.csv&quot;,
     na = c(&quot;NA&quot;,&quot;.&quot;,&quot;&quot;)
@@ -674,14 +667,6 @@ cigarette butts collected by Gwynnda in June of 2022 is 52220.</p>
     region_name = zip_code,
     county_name = paste0(county, &quot; County&quot;)
   )</code></pre>
-<pre><code>## Rows: 322 Columns: 7
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (4): County, County Code, File Date, Neighborhood
-## dbl (3): State FIPS, County FIPS, ZipCode
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code># join to data frames by &quot;county_name&quot;, &quot;region_names&quot;
 zillow = 
   left_join(

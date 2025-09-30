@@ -304,7 +304,7 @@ the total number of cigarette butts collected by Gwynnda in June of 2022 is `r f
 
 # Problem 3
 
-```{r import}
+```{r import, message = FALSE}
 zori_df = 
   read_csv(
     "data/zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv",
