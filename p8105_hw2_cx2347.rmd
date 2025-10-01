@@ -178,8 +178,7 @@ mr_df =
   janitor::clean_names() |>
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons > 0) |>
+  filter(!is.na(dumpster)) |>
   
   # convert the format the 'year'
   mutate(year = as.numeric(year)) |>
@@ -201,8 +200,7 @@ prof_df =
   janitor::clean_names() |>
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons > 0) |>
+  filter(!is.na(dumpster)) |>
   
   # keep track of which Trash wheel this is 
   mutate(trash_wheel = "Professor Trash Wheel")
@@ -219,8 +217,7 @@ gwyn_df =
   janitor::clean_names() |>
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons > 0) |>
+  filter(!is.na(dumpster)) |>
   
   # keep track of which Trash wheel this is 
   mutate(trash_wheel = "Gwynnda Trash Wheel")

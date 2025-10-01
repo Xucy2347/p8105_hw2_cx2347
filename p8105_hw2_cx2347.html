@@ -524,8 +524,7 @@ and <code>month</code> are used to merge three datasets;
   janitor::clean_names() |&gt;
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons &gt; 0) |&gt;
+  filter(!is.na(dumpster)) |&gt;
   
   # convert the format the &#39;year&#39;
   mutate(year = as.numeric(year)) |&gt;
@@ -544,8 +543,7 @@ and <code>month</code> are used to merge three datasets;
   janitor::clean_names() |&gt;
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons &gt; 0) |&gt;
+  filter(!is.na(dumpster)) |&gt;
   
   # keep track of which Trash wheel this is 
   mutate(trash_wheel = &quot;Professor Trash Wheel&quot;)</code></pre>
@@ -558,8 +556,7 @@ and <code>month</code> are used to merge three datasets;
   janitor::clean_names() |&gt;
   
   # omit lines without dumpster-specific data
-  # keep the dumpster obs that the weight is greater than 0
-  filter(weight_tons &gt; 0) |&gt;
+  filter(!is.na(dumpster)) |&gt;
   
   # keep track of which Trash wheel this is 
   mutate(trash_wheel = &quot;Gwynnda Trash Wheel&quot;)</code></pre>
@@ -593,8 +590,8 @@ dumpsters were collected by the Mr. Trash Wheel).<br />
 <br />
 The dataset <code>prof_df</code> collects information of the “Professor
 Trash Wheel” on the dumpster number, date of collection, amount of total
-litter and litter type from 2017-01-02 to 2024-05-30. There are 118 rows
-and 14 columns in the dataset. This dataset includes 14 variables:
+litter and litter type from NA to NA. There are 119 rows and 14 columns
+in the dataset. This dataset includes 14 variables:
 <code>dumpster</code> (the dumpster number); <code>month</code>,
 <code>year</code> and <code>date</code>(the month, year, and date are
 the time of data collection); <code>weight_tons</code> (the weight of
@@ -628,7 +625,7 @@ dumpsters were collected by the Gwynnda Trash Wheel).<br />
 <br />
 The dataset <code>wheel_df</code> were combined from the above three
 datasets, including the information from Mr. Trash Wheel, Professor
-Trash Wheel, Gwynnda Trash Wheel. There are 1032 observation and 15
+Trash Wheel, Gwynnda Trash Wheel. There are 1033 observation and 15
 variables in the dataset. This dataset includes 15 variables:
 <code>dumpster</code> (the dumpster number); <code>year</code>,
 <code>month</code> and <code>date</code>(the month, year, and date are
@@ -642,10 +639,10 @@ volumn of the dumpster collected in cubic yards);
 associated dumpsters); <code>homes_powered</code> (the numbers of home
 powered from electricity made from the trash collected)
 <code>trash_wheel</code> (the variable generated to indicate which Trash
-Wheel collected the associate dumpster). The data from 2014-05-16 to
-2024-06-11 is collected. For available data, the total weight of trash
-collected by Professor Trash Wheel is 246.74 tons; the total number of
-cigarette butts collected by Gwynnda in June of 2022 is 52220.</p>
+Wheel collected the associate dumpster). The data from NA to NA is
+collected. For available data, the total weight of trash collected by
+Professor Trash Wheel is NA tons; the total number of cigarette butts
+collected by Gwynnda in June of 2022 is 52220.</p>
 </div>
 </div>
 <div id="problem-3" class="section level1">
