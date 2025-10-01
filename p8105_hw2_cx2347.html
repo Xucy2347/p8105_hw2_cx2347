@@ -491,35 +491,36 @@ counted.<br />
 The final <code>result</code> dataset is merged from the datasets
 mentioned above. The year range of the dataset is between 1947 and 2015.
 There are 822 rows and 11 columns in the data frame. This dataset
-includes 11 variables included: <code>year</code>, ‘month’ (the year and
-month when the number was counted), <code>gov_gop</code> (the number of
-republican governors on the associated date), <code>sen_gop</code> (the
-number of republican senators on the associated date),
-<code>rep_gop</code> (the number of republican representatives on the
-associated date), <code>gov_dem</code> (the number of democratic
-governors on the associated date), <code>sen_dem</code> (the number of
-democratic senators on the associated date), <code>rep_dem</code> (the
-number of democratic representatives on the associated date),
-<code>president</code> (on the associated year and month, whether the
-president is republican or democratic). <code>close</code> (the closing
-values of the S&amp;P stock index in the associated year and month),
-<code>unemployment</code> (the percentage of the unemployment rate in
-the associated year and month). Among those variables: <code>year</code>
-and <code>month</code> are used to merge three datasets;
-<code>gov_gop</code>, <code>sen_gop</code>, <code>rep_gop</code>,
-<code>gov_dem</code>, <code>sen_dem</code>, <code>rep_dem</code> and
-<code>president</code> come from the dataset <code>pol</code>;
-<code>close</code> comes from the dataset <code>snp</code>;
-<code>unemployment</code> comes from the dataset <code>ue</code>.</p>
+includes 11 variables included: <code>year</code>, <code>month</code>
+(the year and month when the number was counted), <code>gov_gop</code>
+(the number of republican governors on the associated date),
+<code>sen_gop</code> (the number of republican senators on the
+associated date), <code>rep_gop</code> (the number of republican
+representatives on the associated date), <code>gov_dem</code> (the
+number of democratic governors on the associated date),
+<code>sen_dem</code> (the number of democratic senators on the
+associated date), <code>rep_dem</code> (the number of democratic
+representatives on the associated date), <code>president</code> (on the
+associated year and month, whether the president is republican or
+democratic). <code>close</code> (the closing values of the S&amp;P stock
+index in the associated year and month), <code>unemployment</code> (the
+percentage of the unemployment rate in the associated year and month).
+Among those variables: <code>year</code> and <code>month</code> are used
+to merge three datasets; <code>gov_gop</code>, <code>sen_gop</code>,
+<code>rep_gop</code>, <code>gov_dem</code>, <code>sen_dem</code>,
+<code>rep_dem</code> and <code>president</code> come from the dataset
+<code>pol</code>; <code>close</code> comes from the dataset
+<code>snp</code>; <code>unemployment</code> comes from the dataset
+<code>ue</code>.</p>
 </div>
 </div>
 <div id="problem-2" class="section level1">
 <h1>Problem 2</h1>
 <pre class="r"><code>mr_df = 
   read_excel(
-    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
+    &quot;data/202509 Trash Wheel Collection Data.xlsx&quot;, 
     sheet = &quot;Mr. Trash Wheel&quot;, 
-    range = &quot;A2:N653&quot;
+    range = &quot;A2:N709&quot;
     ) |&gt; 
   janitor::clean_names() |&gt;
   
@@ -536,9 +537,9 @@ and <code>month</code> are used to merge three datasets;
   mutate(trash_wheel = &quot;Mr. Trash Wheel&quot;)</code></pre>
 <pre class="r"><code>prof_df =
   read_excel(
-    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
+    &quot;data/202509 Trash Wheel Collection Data.xlsx&quot;, 
     sheet = &quot;Professor Trash Wheel&quot;, 
-    range = &quot;A2:M121&quot;
+    range = &quot;A2:M134&quot;
     ) |&gt;
   janitor::clean_names() |&gt;
   
@@ -549,17 +550,17 @@ and <code>month</code> are used to merge three datasets;
   mutate(trash_wheel = &quot;Professor Trash Wheel&quot;)</code></pre>
 <pre class="r"><code>gwyn_df =
   read_excel(
-    &quot;data/202409 Trash Wheel Collection Data.xlsx&quot;, 
-    sheet = &quot;Gwynnda Trash Wheel&quot;, 
-    range = &quot;A2:L265&quot;
+    &quot;data/202509 Trash Wheel Collection Data.xlsx&quot;, 
+    sheet = &quot;Gwynns Falls Trash Wheel&quot;, 
+    range = &quot;A2:L351&quot;
     ) |&gt;
   janitor::clean_names() |&gt;
   
   # omit lines without dumpster-specific data
-  filter(!is.na(dumpster)) |&gt;
+  filter(!is.na(dumpster)) |&gt; 
   
   # keep track of which Trash wheel this is 
-  mutate(trash_wheel = &quot;Gwynnda Trash Wheel&quot;)</code></pre>
+  mutate(trash_wheel = &quot;Gwynns Falls Trash Wheel&quot;)</code></pre>
 <pre class="r"><code># combine the three dataset
 wheel_df = 
   bind_rows(
@@ -572,7 +573,7 @@ wheel_df =
 <h3>reporting the datasets:</h3>
 <p>The dataset <code>mr_df</code> collects information of the “Mr. Trash
 Wheel” on the dumpster number, date of collection, amount of total
-litter and litter type from 2014-05-16 to 2024-06-11. There are 651 rows
+litter and litter type from 2014-05-16 to 2025-07-29. There are 707 rows
 and 15 columns in the dataset. This dataset includes 15 variables:
 <code>dumpster</code> (the dumpster number); <code>month</code>,
 <code>year</code> and <code>date</code>(the month, year, and date are
@@ -590,8 +591,8 @@ dumpsters were collected by the Mr. Trash Wheel).<br />
 <br />
 The dataset <code>prof_df</code> collects information of the “Professor
 Trash Wheel” on the dumpster number, date of collection, amount of total
-litter and litter type from NA to NA. There are 119 rows and 14 columns
-in the dataset. This dataset includes 14 variables:
+litter and litter type from 2017-01-02 to 2025-07-16. There are 132 rows
+and 14 columns in the dataset. This dataset includes 14 variables:
 <code>dumpster</code> (the dumpster number); <code>month</code>,
 <code>year</code> and <code>date</code>(the month, year, and date are
 the time of data collection); <code>weight_tons</code> (the weight of
@@ -608,7 +609,7 @@ Professor Trash Wheel).<br />
 <br />
 The dataset <code>gwyn_df</code> collects information of the “Gwynnda
 Trash Wheel” on the dumpster number, date of collection, amount of total
-litter and litter type from 2021-07-03 to 2024-06-07. There are 263 rows
+litter and litter type from 2021-07-03 to 2025-07-22. There are 349 rows
 and 13 columns in the dataset. This dataset includes 13 variables:
 <code>dumpster</code> (the dumpster number); <code>month</code>,
 <code>year</code> and <code>date</code>(the month, year, and date are
@@ -625,7 +626,7 @@ dumpsters were collected by the Gwynnda Trash Wheel).<br />
 <br />
 The dataset <code>wheel_df</code> were combined from the above three
 datasets, including the information from Mr. Trash Wheel, Professor
-Trash Wheel, Gwynnda Trash Wheel. There are 1033 observation and 15
+Trash Wheel, Gwynns Falls Trash Wheel. There are 1188 observation and 15
 variables in the dataset. This dataset includes 15 variables:
 <code>dumpster</code> (the dumpster number); <code>year</code>,
 <code>month</code> and <code>date</code>(the month, year, and date are
@@ -639,10 +640,10 @@ volumn of the dumpster collected in cubic yards);
 associated dumpsters); <code>homes_powered</code> (the numbers of home
 powered from electricity made from the trash collected)
 <code>trash_wheel</code> (the variable generated to indicate which Trash
-Wheel collected the associate dumpster). The data from NA to NA is
-collected. For available data, the total weight of trash collected by
-Professor Trash Wheel is NA tons; the total number of cigarette butts
-collected by Gwynnda in June of 2022 is 52220.</p>
+Wheel collected the associate dumpster). The data from 2014-05-16 to
+2025-07-29 is collected. For available data, the total weight of trash
+collected by Professor Trash Wheel is 282.26 tons; the total number of
+cigarette butts collected by Gwynnda in June of 2022 is 18120.</p>
 </div>
 </div>
 <div id="problem-3" class="section level1">
@@ -698,14 +699,15 @@ zillow_non =
 <h3>reporting the dataset</h3>
 <p>The dataset <code>zillow</code> were combined from the
 <code>zip_df</code> and <code>zori_df</code>, including the information
-of the Zillow Observed Rent Index in New York City between Janurary 2015
+of the Zillow Observed Rent Index in New York City between January 2015
 and August 2024. There are 149 observation and 132 variables in the
 dataset. The variables covered information related to the geo
-information (eg. <code>region_name</code>, <code>state_fips</code> and
-so on), the date when the ZORI is collected (eg.
-<code>x2015_01_31</code>), and the size rank (<code>size_rank</code>).
-There are 149 unique ZIP codes and 43 unique neighborhoods in the
-dataset.<br />
+information on state, county, neighborhood and zip codes (eg.
+<code>region_name</code>, <code>state_fips</code> and so on), the rental
+price for each month between January 2015 and August 2024 (eg.
+<code>x2015_01_31</code>), and the rank of sizes
+(<code>size_rank</code>). There are 149 unique ZIP codes and 43 unique
+neighborhoods in the dataset.<br />
 <br />
 There are 171 ZIP codes only appear in the ZIP code list but not in the
 Zillow Rental Price dataset, which are: 10008, 10020, 10041, 10043,
@@ -728,7 +730,7 @@ Zillow Rental Price dataset, which are: 10008, 10020, 10041, 10043,
 11499, 11559, 11580, 11690, 11694, 11695, 11697. The reason that these
 ZIP codes are excluded might be due to:<br />
   1) some ZIP codes do not have a neighborhood or does not record the
-neightborhood in it. For example, for the area with ZIP codes of 10499,
+neighborhood in it. For example, for the area with ZIP codes of 10499,
 the neighborhood is listed as NA. So, it is unlikely that there are many
 properties rental or sales. Therefore, they will be excluded from the
 Zillow Observed Rental Dataset.<br />

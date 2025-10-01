@@ -148,7 +148,7 @@ The final `result` dataset is merged from the datasets mentioned above.
 The year range of the dataset is between `r min(pull(result, year))` and `r max(pull(result, year))`.
 There are `r nrow(result)` rows and `r ncol(result)` columns in the data frame.
 This dataset includes `r ncol(result)` variables included:
-  `year`, 'month' (the year and month when the number was counted),
+  `year`, `month` (the year and month when the number was counted),
   `gov_gop` (the number of republican governors on the associated date),
   `sen_gop` (the number of republican senators on the associated date),
   `rep_gop` (the number of republican representatives on the associated date),
@@ -171,9 +171,9 @@ Among those variables:
 ```{r Mr. Trash Wheel}
 mr_df = 
   read_excel(
-    "data/202409 Trash Wheel Collection Data.xlsx", 
+    "data/202509 Trash Wheel Collection Data.xlsx", 
     sheet = "Mr. Trash Wheel", 
-    range = "A2:N653"
+    range = "A2:N709"
     ) |> 
   janitor::clean_names() |>
   
@@ -193,9 +193,9 @@ mr_df =
 ```{r Professor Trash Wheel}
 prof_df =
   read_excel(
-    "data/202409 Trash Wheel Collection Data.xlsx", 
+    "data/202509 Trash Wheel Collection Data.xlsx", 
     sheet = "Professor Trash Wheel", 
-    range = "A2:M121"
+    range = "A2:M134"
     ) |>
   janitor::clean_names() |>
   
@@ -210,17 +210,17 @@ prof_df =
 ```{r Gwynnda Trash Wheel}
 gwyn_df =
   read_excel(
-    "data/202409 Trash Wheel Collection Data.xlsx", 
-    sheet = "Gwynnda Trash Wheel", 
-    range = "A2:L265"
+    "data/202509 Trash Wheel Collection Data.xlsx", 
+    sheet = "Gwynns Falls Trash Wheel", 
+    range = "A2:L351"
     ) |>
   janitor::clean_names() |>
   
   # omit lines without dumpster-specific data
-  filter(!is.na(dumpster)) |>
+  filter(!is.na(dumpster)) |> 
   
   # keep track of which Trash wheel this is 
-  mutate(trash_wheel = "Gwynnda Trash Wheel")
+  mutate(trash_wheel = "Gwynns Falls Trash Wheel")
 ```
 
 ```{r bind rows}
@@ -237,7 +237,7 @@ wheel_df =
 ```{r calcuate num of cigarette_butts, echo=FALSE, include=FALSE}
 # prepare the information of Gwynnda in June of 2022
 cig_sum = 
-  wheel_df |>
+  gwyn_df |>
   filter(month == "June" & year==2022)
 ```
 
@@ -294,9 +294,9 @@ This dataset includes `r ncol(wheel_df)` variables:
   `plastic_bags`, `wrappers`, and `sports_balls` (numbers of different litter types in the associated dumpsters);
   `homes_powered` (the numbers of home powered from electricity made from the trash collected)
   `trash_wheel` (the variable generated to indicate which Trash Wheel collected the associate dumpster).
-The data from `r min(pull(wheel_df, date))` to `r max(pull(wheel_df, date))` is collected.
+The data from `r min(pull(wheel_df, date), na.rm = TRUE)` to `r max(pull(wheel_df, date), na.rm = TRUE)` is collected.
 For available data, 
-the total weight of trash collected by Professor Trash Wheel is `r sum(pull(prof_df, weight_tons))` tons;
+the total weight of trash collected by Professor Trash Wheel is `r sum(pull(prof_df, weight_tons), na.rm = TRUE)` tons;
 the total number of cigarette butts collected by Gwynnda in June of 2022 is `r format(sum(pull(cig_sum, cigarette_butts)), scientific=FALSE)`.
 
 # Problem 3
@@ -356,12 +356,12 @@ zillow_non =
 
 ### reporting the dataset
 The dataset `zillow` were combined from the `zip_df` and `zori_df`, 
-including the information of the Zillow Observed Rent Index in New York City between Janurary 2015 and August 2024.
+including the information of the Zillow Observed Rent Index in New York City between January 2015 and August 2024.
 There are `r nrow(zillow)` observation and `r ncol(zillow)` variables in the dataset.
 The variables covered information related to 
-  the geo information (eg. `region_name`, `state_fips` and so on), 
-  the date when the ZORI is collected (eg. `x2015_01_31`), 
-  and the size rank (`size_rank`).
+  the geo information on state, county, neighborhood and zip codes (eg. `region_name`, `state_fips` and so on), 
+  the rental price for each month between January 2015 and August 2024 (eg. `x2015_01_31`), 
+  and the rank of sizes (`size_rank`).
 There are `r length(unique(pull(zillow, region_name)))` unique ZIP codes
   and `r length(unique(pull(zillow, neighborhood)))` unique neighborhoods in the dataset.
 \
@@ -369,7 +369,7 @@ There are `r length(unique(pull(zillow, region_name)))` unique ZIP codes
 There are `r length(unique(pull(zillow_non, region_name)))` ZIP codes only appear in the ZIP code list but not in the Zillow Rental Price dataset, 
 which are: `r format(unique(pull(zillow_non, region_name)), scientific = FALSE)`.
 The reason that these ZIP codes are excluded might be due to:\
-&emsp; 1) some ZIP codes do not have a neighborhood or does not record the neightborhood in it. For example, for the area with ZIP codes of 10499, the neighborhood is listed as NA. So, it is unlikely that there are many properties rental or sales. Therefore, they will be excluded from the Zillow Observed Rental Dataset.\
+&emsp; 1) some ZIP codes do not have a neighborhood or does not record the neighborhood in it. For example, for the area with ZIP codes of 10499, the neighborhood is listed as NA. So, it is unlikely that there are many properties rental or sales. Therefore, they will be excluded from the Zillow Observed Rental Dataset.\
 &emsp; 2) among zip codes with a neighborhood value, they might be in places where the rental properties are scarce, either due to not many house properties or due to most of them are personal properties not for rents.\
 &emsp; 3) other concerns on privacy, limitations of data collection and so on can also result in exclusion of those ZIP codes.
 
