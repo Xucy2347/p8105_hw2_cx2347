@@ -666,7 +666,7 @@ zip_df =
     county_name = paste0(county, &quot; County&quot;)
   )</code></pre>
 <pre class="r"><code># join to data frames by &quot;county_name&quot;, &quot;region_names&quot;
-zillow = 
+zillow_raw = 
   left_join(
     zori_df,
     zip_df,
@@ -687,6 +687,19 @@ zillow =
   # rearrange the obs
   arrange(size_rank)
 
+# convert the data set to a longer version
+zillow_df = zillow_raw |&gt;
+  pivot_longer(
+    col = x2015_01_31:x2024_08_31,
+    values_to = &quot;price&quot;,
+    names_to = &quot;date&quot;
+  ) |&gt;
+  mutate(
+    date = substr(date, start = 2, stop = 11),
+    date = as_date(date)
+  ) |&gt;
+  arrange(size_rank, region_name, date)
+
 # get the data frame where ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset
 zillow_non = 
   anti_join(
@@ -697,17 +710,20 @@ zillow_non =
   arrange(zip_code)</code></pre>
 <div id="reporting-the-dataset" class="section level3">
 <h3>reporting the dataset</h3>
-<p>The dataset <code>zillow</code> were combined from the
+<p>The dataset <code>zillow_df</code> were combined from the
 <code>zip_df</code> and <code>zori_df</code>, including the information
 of the Zillow Observed Rent Index in New York City between January 2015
-and August 2024. There are 149 observation and 132 variables in the
-dataset. The variables covered information related to the geo
-information on state, county, neighborhood and zip codes (eg.
-<code>region_name</code>, <code>state_fips</code> and so on), the rental
-price for each month between January 2015 and August 2024 (eg.
-<code>x2015_01_31</code>), and the rank of sizes
-(<code>size_rank</code>). There are 149 unique ZIP codes and 43 unique
-neighborhoods in the dataset.<br />
+and August 2024. There are 17284 observation and 18 variables in the
+dataset. The rental price of 6834 observations are not reported. The
+variables covered information related to the geo information on state,
+county, neighborhood and zip codes (eg. <code>region_name</code>,
+<code>state_fips</code> and so on), the rental price for each month
+between January 2015 and August 2024 (<code>price</code>), and the rank
+of sizes (<code>size_rank</code>). The dataset is order by the
+<code>size_rank</code> (following the original dataset
+<code>zori_df</code>), <code>region_name</code> and <code>date</code>.
+There are 149 unique ZIP codes and 42 unique neighborhoods in the
+dataset.<br />
 <br />
 There are 171 ZIP codes only appear in the ZIP code list but not in the
 Zillow Rental Price dataset, which are: 10008, 10020, 10041, 10043,
@@ -742,7 +758,7 @@ rents.<br />
 can also result in exclusion of those ZIP codes.</p>
 <pre class="r"><code># compare rental prices in January 2021 to prices in January 2020
 zillow_compare = 
-  zillow |&gt;
+  zillow_raw |&gt;
   
   # create a new variable that measures the drop in prices
   mutate(
@@ -754,7 +770,7 @@ zillow_compare =
     desc(drop_in_price)
   ) |&gt;
   mutate(
-    rank = 1:dim(zillow)[1]
+    rank = 1:dim(zillow_raw)[1]
   ) |&gt;
   
   # filter out first 10 zip codes

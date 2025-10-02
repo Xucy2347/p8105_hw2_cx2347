@@ -323,7 +323,7 @@ zip_df =
 
 ```{r merge}
 # join to data frames by "county_name", "region_names"
-zillow = 
+zillow_raw = 
   left_join(
     zori_df,
     zip_df,
@@ -344,6 +344,19 @@ zillow =
   # rearrange the obs
   arrange(size_rank)
 
+# convert the data set to a longer version
+zillow_df = zillow_raw |>
+  pivot_longer(
+    col = x2015_01_31:x2024_08_31,
+    values_to = "price",
+    names_to = "date"
+  ) |>
+  mutate(
+    date = substr(date, start = 2, stop = 11),
+    date = as_date(date)
+  ) |>
+  arrange(size_rank, region_name, date)
+
 # get the data frame where ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset
 zillow_non = 
   anti_join(
@@ -355,18 +368,20 @@ zillow_non =
 ```
 
 ### reporting the dataset
-The dataset `zillow` were combined from the `zip_df` and `zori_df`, 
+The dataset `zillow_df` were combined from the `zip_df` and `zori_df`, 
 including the information of the Zillow Observed Rent Index in New York City between January 2015 and August 2024.
-There are `r nrow(zillow)` observation and `r ncol(zillow)` variables in the dataset.
+There are `r nrow(zillow_df)` observation and `r ncol(zillow_df)` variables in the dataset.
+The rental price of `r sum(is.na(pull(zillow_df, price)))` observations are not reported.
 The variables covered information related to 
   the geo information on state, county, neighborhood and zip codes (eg. `region_name`, `state_fips` and so on), 
-  the rental price for each month between January 2015 and August 2024 (eg. `x2015_01_31`), 
+  the rental price for each month between January 2015 and August 2024 (`price`), 
   and the rank of sizes (`size_rank`).
-There are `r length(unique(pull(zillow, region_name)))` unique ZIP codes
-  and `r length(unique(pull(zillow, neighborhood)))` unique neighborhoods in the dataset.
+The dataset is order by the `size_rank` (following the original dataset `zori_df`), `region_name` and `date`.
+There are `r n_distinct(pull(zillow_df, region_name), na.rm = TRUE)` unique ZIP codes
+  and `r n_distinct(pull(zillow_df, neighborhood), na.rm = TRUE)` unique neighborhoods in the dataset.
 \
 \
-There are `r length(unique(pull(zillow_non, region_name)))` ZIP codes only appear in the ZIP code list but not in the Zillow Rental Price dataset, 
+There are `r n_distinct(pull(zillow_non, region_name), na.rm = TRUE)` ZIP codes only appear in the ZIP code list but not in the Zillow Rental Price dataset, 
 which are: `r format(unique(pull(zillow_non, region_name)), scientific = FALSE)`.
 The reason that these ZIP codes are excluded might be due to:\
 &emsp; 1) some ZIP codes do not have a neighborhood or does not record the neighborhood in it. For example, for the area with ZIP codes of 10499, the neighborhood is listed as NA. So, it is unlikely that there are many properties rental or sales. Therefore, they will be excluded from the Zillow Observed Rental Dataset.\
@@ -376,7 +391,7 @@ The reason that these ZIP codes are excluded might be due to:\
 ```{r compare}
 # compare rental prices in January 2021 to prices in January 2020
 zillow_compare = 
-  zillow |>
+  zillow_raw |>
   
   # create a new variable that measures the drop in prices
   mutate(
@@ -388,7 +403,7 @@ zillow_compare =
     desc(drop_in_price)
   ) |>
   mutate(
-    rank = 1:dim(zillow)[1]
+    rank = 1:dim(zillow_raw)[1]
   ) |>
   
   # filter out first 10 zip codes
